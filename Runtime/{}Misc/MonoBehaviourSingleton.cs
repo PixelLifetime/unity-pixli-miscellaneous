@@ -1,23 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿/* Created by Max.K.Kimo */
 
-public class MonoBehaviourSingleton<T> : MonoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public abstract class MonoBehaviourSingleton<T> : MonoBehaviour
 	where T : MonoBehaviourSingleton<T>
 {
-	public static T Instance { get; private set; }
+	public static MonoBehaviourSingletonEmbedded<T> S_Singleton_ { get; private set; }
+	public static T _Instance { get { return S_Singleton_._Instance; ; } }
 
 	protected virtual void Awake()
 	{
-		if (Instance == null)
-		{
-			Instance = this as T;
-
-			Object.DontDestroyOnLoad(this.gameObject);
-		}
-		else if (Instance != this)
-		{
-			Object.Destroy(this.gameObject);
-		}
+		S_Singleton_ = new MonoBehaviourSingletonEmbedded<T>(this as T);
 	}
 }
