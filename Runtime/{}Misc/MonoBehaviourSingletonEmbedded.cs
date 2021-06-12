@@ -40,7 +40,7 @@ public class MonoBehaviourSingletonEmbedded<T>
 			//while (rootTransform.parent != null)
 			//	rootTransform = rootTransform.parent;
 
-			Object.DontDestroyOnLoad(Instance_.gameObject);
+			//Object.DontDestroyOnLoad(Instance_.gameObject);
 		}
 		else if (Instance_ != creator)
 		{

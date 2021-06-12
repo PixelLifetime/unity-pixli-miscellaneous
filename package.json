@@ -1,10 +1,10 @@
 {
 	"name": "com.pixel-lifetime.unity-pixli-miscellaneous",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"displayName": "PixLi miscellaneous.",
 	"description": "A lot of different stuff..",
-	"unity": "2020.1",
-	"unityRelease": "2f1",
+	"unity": "2021.1",
+	"unityRelease": "10f1",
 	"dependencies": {},
 	"keywords": [
 		"system",
