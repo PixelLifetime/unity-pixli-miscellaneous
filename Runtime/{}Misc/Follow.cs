@@ -14,27 +14,27 @@ public class Follow : MonoBehaviour
 	}
 
 	public void SetTarget(Transform transform) => this._target = transform;
-	public void SetTarget(Unit unit) => this._target = unit.transform;
+	//public void SetTarget(Unit unit) => this._target = unit.transform;
 
-	public IEnumerator ReplaceMeWithNormalMethodThatYouHadInOtherPackages(Action action)
-	{
-		yield return null;
+	//public IEnumerator ReplaceMeWithNormalMethodThatYouHadInOtherPackages(Action action)
+	//{
+	//	yield return null;
 
-		action.Invoke();
-	}
+	//	action.Invoke();
+	//}
 
 	public void ResetTarget() => this._target = null;
 
-	public void SetTargetMomentarily(Unit unit)
-	{
-		this.SetTarget(unit);
+	//public void SetTargetMomentarily(Unit unit)
+	//{
+	//	this.SetTarget(unit);
 
-		this.StartCoroutine(
-			routine: this.ReplaceMeWithNormalMethodThatYouHadInOtherPackages(
-				action: this.ResetTarget
-			)
-		);
-	}
+	//	this.StartCoroutine(
+	//		routine: this.ReplaceMeWithNormalMethodThatYouHadInOtherPackages(
+	//			action: this.ResetTarget
+	//		)
+	//	);
+	//}
 
 	public Vector3 Offset;
 
