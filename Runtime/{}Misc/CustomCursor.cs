@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 {
-	[SerializeField] private Data _defaultData = new Data(null, new Vector2(32.0f, 32.0f), Vector2.zero, 0.0f, -1);
+	[SerializeField] private Data _defaultData = new Data(null, new Vector2(32.0f, 32.0f), Vector2.zero, 0.0f, 0.0f, -1);
 	public Data _DefaultCursorData => this._defaultData;
 
 	internal sealed class DataComparer : IComparer<Data>
@@ -33,7 +33,7 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 
 		Vector2 pivot = new Vector2(x: Event.current.mousePosition.x, y: Event.current.mousePosition.y);
 
-		GUIUtility.RotateAroundPivot(angle: data.Angle, pivotPoint: pivot);
+		GUIUtility.RotateAroundPivot(angle: data.Angle + data.AngleOffset, pivotPoint: pivot);
 
 		GUI.DrawTexture(new Rect(x, y, data.Size.x, data.Size.y), data.Texture2D);
 
@@ -57,16 +57,19 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 		public Vector2 Size = new Vector2(32.0f, 32.0f);
 		public Vector2 Hotspot;
 		public float Angle;
+		public float AngleOffset;
 
 		[SerializeField] private int _order;
 		public int Order => this._order;
 
-		public Data(Texture2D texture2D, Vector2 size, Vector2 hotspot, float angle, int order)
+		public Data(Texture2D texture2D, Vector2 size, Vector2 hotspot, float angle, float angleOffset, int order)
 		{
 			this.Texture2D = texture2D;
 			this.Size = size;
 			this.Hotspot = hotspot;
 			this.Angle = angle;
+			this.AngleOffset = angleOffset;
+
 			this._order = order;
 		}
 
@@ -76,7 +79,8 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 				   EqualityComparer<Texture2D>.Default.Equals(this.Texture2D, other.Texture2D) &&
 				   this.Size.Equals(other.Size) &&
 				   this.Hotspot.Equals(other.Hotspot) &&
-				   this.Angle == other.Angle;
+				   this.Angle == other.Angle &&
+				   this.AngleOffset == other.AngleOffset;
 		}
 
 		public override int GetHashCode()
@@ -86,27 +90,30 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 			hashCode = hashCode * -1521134295 + this.Size.GetHashCode();
 			hashCode = hashCode * -1521134295 + this.Hotspot.GetHashCode();
 			hashCode = hashCode * -1521134295 + this.Angle.GetHashCode();
+			hashCode = hashCode * -1521134295 + this.AngleOffset.GetHashCode();
 			hashCode = hashCode * -1521134295 + this._order.GetHashCode();
 			return hashCode;
 		}
 
-		public void Deconstruct(out Texture2D texture2D, out Vector2 size, out Vector2 hotspot, out float angle, out int order)
+		public void Deconstruct(out Texture2D texture2D, out Vector2 size, out Vector2 hotspot, out float angle, out float angleOffset, out int order)
 		{
 			texture2D = this.Texture2D;
 			size = this.Size;
 			hotspot = this.Hotspot;
 			angle = this.Angle;
+			angleOffset = this.AngleOffset;
+
 			order = this._order;
 		}
 
-		public static implicit operator (Texture2D Texture2D, Vector2 Size, Vector2 Hotspot, float Angle, int Order) (Data value)
+		public static implicit operator (Texture2D Texture2D, Vector2 Size, Vector2 Hotspot, float Angle, float AngleOffset, int Order) (Data value)
 		{
-			return (value.Texture2D, value.Size, value.Hotspot, value.Angle, value._order);
+			return (value.Texture2D, value.Size, value.Hotspot, value.Angle, value.AngleOffset, value._order);
 		}
 
-		public static implicit operator Data((Texture2D Texture2D, Vector2 Size, Vector2 Hotspot, float Angle, int Order) value)
+		public static implicit operator Data((Texture2D Texture2D, Vector2 Size, Vector2 Hotspot, float Angle, float AngleOffset, int Order) value)
 		{
-			return new Data(value.Texture2D, value.Size, value.Hotspot, value.Angle, value.Order);
+			return new Data(value.Texture2D, value.Size, value.Hotspot, value.Angle, value.AngleOffset, value.Order);
 		}
 	}
 }
