@@ -1,6 +1,10 @@
 {
     "name": "com.pixel-lifetime.unity-pixli-miscellaneous",
-    "references": [],
+    "rootNamespace": "",
+    "references": [
+        "GUID:5c3eec09827b05749b14a18fe93c0408",
+        "GUID:e4cd6b641a02fa442a29bacdc712b8dd"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
