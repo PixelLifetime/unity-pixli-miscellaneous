@@ -12,9 +12,9 @@ using UnityEditor;
 
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
-using HDebug = PixLi.Debug;
+using HDebug = PixLi.Debugging.Debug;
 
-namespace PixLi
+namespace PixLi.Debugging
 {
 	public class Debugger : MonoBehaviour
 	{
