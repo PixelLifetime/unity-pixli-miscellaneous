@@ -40,12 +40,18 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 		GUI.matrix = matrix;
 	}
 
+	[SerializeField] private bool _initialCursorVisibility;
+	public bool _InitialCursorVisibility => this._initialCursorVisibility;
+
+	[SerializeField] private CursorLockMode _initialCursorLockMode = CursorLockMode.Confined;
+	public CursorLockMode _InitialCursorLockMode => this._initialCursorLockMode;
+
 	protected override void Awake()
 	{
 		base.Awake();
 
-		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Confined;
+		Cursor.visible = this._initialCursorVisibility;
+		Cursor.lockState = this._initialCursorLockMode;
 
 		this._dataSet.Add(item: this._defaultData);
 	}
