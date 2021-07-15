@@ -1,59 +1,85 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
-[System.Serializable]
-public abstract class AssetArchive<TAsset> : ScriptableObject, IArchive<TAsset>
+using PixLi.RandomDistribution;
+using Random = PixLi.RandomDistribution.Random;
+
+namespace PixLi
 {
-	private int _selectedIndex = 0;
-	public TAsset _SelectedAsset => this.assets[this._selectedIndex];
-
-	[SerializeField] protected TAsset[] assets;
-	public TAsset[] Assets
+	[System.Serializable]
+	public abstract class AssetArchive<TAsset> : ScriptableObject, IArchive<TAsset>
 	{
-		get { return this.assets; }
-		set
+		private int _selectedIndex = 0;
+
+		[SerializeField] private RandomDistributionProvider<TAsset> _randomDistributionProvider = new RandomDistributionProvider<TAsset>();
+		public RandomDistributionProvider<TAsset> _RandomDistributionProvider => this._randomDistributionProvider;
+
+		//TODO: I kinda don't like this. You should be able to access assets directly. (bad idea 1)[syncronizing 2 arrays] (good idea)[find some method to separate assets and table logic without syncing arrays as well].
+		public List<TableData<TAsset>> Assets => this._randomDistributionProvider._Data;
+
+		public TAsset _SelectedAsset => this._randomDistributionProvider._Data[this._selectedIndex].Object;
+
+		public TAsset Previous(bool loop = true)
 		{
-			this.assets = value;
+			this._selectedIndex = loop
+								  ? ((--this._selectedIndex + this._randomDistributionProvider._Data.Count) % this._randomDistributionProvider._Data.Count)
+								  : Mathf.Clamp(--this._selectedIndex, 0, this._randomDistributionProvider._Data.Count - 1);
+
+			return this._SelectedAsset;
+		}
+
+		public TAsset Next(bool loop = true)
+		{
+			this._selectedIndex = loop
+								  ? (++this._selectedIndex % this._randomDistributionProvider._Data.Count)
+								  : Mathf.Clamp(++this._selectedIndex, 0, this._randomDistributionProvider._Data.Count - 1);
+
+			return this._SelectedAsset;
+		}
+
+		//[SerializeField] private bool _doNotRepeatRandomAsset;
+		//public bool _DoNotRepeatRandomAsset => this._doNotRepeatRandomAsset;
+
+		private TableData<TAsset> _lastProvidedEntry;
+
+		public TAsset Random()
+		{
+			//if (this._doNotRepeatRandomAsset)
+			//{
+			//	TableData<TAsset> previouslyProvidedEntry = this._lastProvidedEntry;
+
+			//	this._lastProvidedEntry = this._randomDistributionProvider.Provide();
+			//	this._lastProvidedEntry.Selectable = false;
+
+			//	if (previouslyProvidedEntry != null)
+			//		previouslyProvidedEntry.Selectable = true;
+			//}
+			//else
+				this._lastProvidedEntry = this._randomDistributionProvider.Provide();
+
+			//Debug.Log(this._lastProvidedEntry.Object);
+
+			return this._lastProvidedEntry.Object;
+		}
+
+		public virtual void Initialize(Random random)
+		{
+			this._randomDistributionProvider.Initialize(random: random);
+		}
+
+		public void Initialize() => this.Initialize(new Random());
+
+		public virtual void Reset()
+		{
+			this._selectedIndex = 0;
+		}
+
+		protected virtual void OnEnable()
+		{
+			this.Reset();
+
 			this.Initialize();
 		}
-	}
-
-	public TAsset Previous(bool loop = true)
-	{
-		this._selectedIndex = loop ? ((--this._selectedIndex + this.assets.Length) % this.assets.Length) : Mathf.Clamp(--this._selectedIndex, 0, this.assets.Length - 1);
-
-		return this._SelectedAsset;
-	}
-
-	public TAsset Next(bool loop = true)
-	{
-		this._selectedIndex = loop ? (++this._selectedIndex % this.assets.Length) : Mathf.Clamp(++this._selectedIndex, 0, this.assets.Length - 1);
-
-		return this._SelectedAsset;
-	}
-
-	protected Random random;
-
-	public TAsset Random() => this.assets[this.random.Next(maxValue: this.assets.Length)];
-	
-	public virtual void Initialize(Random random)
-	{
-		this.random = random;
-	}
-
-	public void Initialize() => this.Initialize(new Random());
-
-	public virtual void Reset()
-	{
-		this._selectedIndex = 0;
-	}
-
-	protected virtual void OnEnable()
-	{
-		this.Reset();
-
-		this.Initialize();
 	}
 }

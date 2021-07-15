@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
+
+using Random = PixLi.RandomDistribution.Random;
 
 public interface IArchive<TItem>
 {
