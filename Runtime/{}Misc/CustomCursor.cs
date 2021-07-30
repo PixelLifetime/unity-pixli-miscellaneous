@@ -19,8 +19,10 @@ public class CustomCursor : MonoBehaviourSingleton<CustomCursor>
 		if (!this._dataSet.Contains(item: data))
 			this._dataSet.Add(item: data);
 	}
+	public void Add(CustomCursorDataAdapter customCursorDataAdapter) => this.Add(data: customCursorDataAdapter._Data);
 
 	public void Remove(Data data) => this._dataSet.Remove(item: data);
+	public void Remove(CustomCursorDataAdapter customCursorDataAdapter) => this.Remove(data: customCursorDataAdapter._Data);
 
 	private void OnGUI()
 	{
